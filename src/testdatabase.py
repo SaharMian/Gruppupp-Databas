@@ -1,51 +1,29 @@
+from dotenv import load_dotenv
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import sessionmaker, declarative_base
 
+# Ladda miljövariabler från .env
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")
 
+# Bas-klass för ORM-modeller
 Base = declarative_base()
 
-
-
-def create_connection():
-    """
-    Skapa en databasanslutning (SQLAlchemy Engine)
-    för lokal utveckling.
-    """
-    try:
-        dbname = "librarydb_dpu7"   # ändra vid behov
-        user = "postgres"
-        password = os.getenv("LOCAL_DB_PASSWORD", "")
-        host = "localhost"
-        port = 5432
-
-        database_url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
-
-        engine = create_engine(database_url)
-        print(" Ansluten till lokal databas (SQLAlchemy Engine)")
-        return engine
-
-    except SQLAlchemyError as e:
-        print(" Kunde inte ansluta till databasen:")
-        print(e)
-        return None
-
-
-
-
-engine = create_connection()
-
-SessionLocal = sessionmaker(bind=engine)
-
-
+# Skapa engine och session factory
+engine = create_engine(DATABASE_URL, echo=False, future=True)
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
 
 def get_session():
-    """
-    Används i applikationen för att hämta en databas-session.
-    """
-    db = SessionLocal()
+    """Returnerar en ny databas-session."""
+    return SessionLocal()
+
+# Om du kör denna fil direkt: testa anslutningen
+if __name__ == "__main__":
+    from sqlalchemy import text
     try:
-        yield db
-    finally:
-        db.close()
+        with get_session() as session:
+            result = session.execute(text("SELECT 1"))
+            print("✓ Database connection successful!", result.scalar())
+    except Exception as e:
+        print("✗ Database connection failed:", e)
