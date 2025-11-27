@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Date, TIMESTAMP, ForeignKey, text, CheckConstraint # importera nödvändiga SQLAlchemy-komponenter
 from sqlalchemy.orm import relationship                                                            # importera relationship för att definiera relationer mellan tabeller
-from databas import Base                                                                           # importera basen för våra modeller
+from testdatabase import Base                                                                        # importera basen för våra modeller
 
-class Members(Base):
+class Members (Base):
     __tablename__ = 'members'
     id = Column (Integer, primary_key=True, index=True)
     first_name = Column(String, nullable=False)
