@@ -1,5 +1,5 @@
-from src.database import SessionLocal #src eventuellt ta bort, baserat på projekt upplägg
-from src.models import Books
+from database import SessionLocal #src eventuellt ta bort, baserat på projekt upplägg
+from models import Books
 
 def show_all_books():
     session = SessionLocal()
