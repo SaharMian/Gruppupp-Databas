@@ -1,8 +1,8 @@
-from database import SessionLocal #src eventuellt ta bort, baserat på projekt upplägg
+from database import create_connection
 from models import Books
 
 def show_all_books():
-    session = SessionLocal()
+    session = create_connection()
     books = session.query(Books).order_by(Books.title).all()
     for b in books:
         print(f"{b.id}: {b.title} av {b.author}")
@@ -10,7 +10,7 @@ def show_all_books():
 
 def search_books():
     keyword = input("Sök titel eller författare: ")
-    session = SessionLocal()
+    session = create_connection()
     books = session.query(Books).filter(
         (Books.title.ilike(f"%{keyword}%")) | (Books.author.ilike(f"%{keyword}%"))
     ).all()
@@ -21,7 +21,7 @@ def search_books():
 def add_new_book():
     title = input("Titel: ")
     author = input("Författare: ")
-    session = SessionLocal()
+    session = create_connection()
     book = Books(title=title, author=author, total_copies=1, available_copies=1)
     session.add(book)
     session.commit()
@@ -29,7 +29,7 @@ def add_new_book():
     session.close()
 
 def show_available_books():
-    session = SessionLocal()
+    session = create_connection()
     books = session.query(Books).filter(Books.available_copies > 0).all()
     for b in books:
         print(f"{b.id}: {b.title} ({b.available_copies} tillgängliga)")
