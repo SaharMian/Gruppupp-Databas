@@ -1,4 +1,8 @@
-from .database import create_connection
+from database import create_connection
+from book_managment import book_menu
+from member_manager import member_menu
+from loan_manager import loan_menu
+from statistics_reports import stats_menu
 
 def show_menu():
     print("\\n" + "="*50)
