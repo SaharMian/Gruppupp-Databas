@@ -1,4 +1,4 @@
-from .database import create_connection
+from database import create_connection
 
 def show_menu():
     print("\\n" + "="*50)
